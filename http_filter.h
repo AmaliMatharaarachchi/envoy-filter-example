@@ -3,7 +3,6 @@
 #include <string>
 
 #include "envoy/server/filter_config.h"
-// #include "envoy/source/extensions/filters/common/ext_authz/ext_authz_grpc_impl.h"
 
 #include "http_filter.pb.h"
 
@@ -24,11 +23,8 @@ private:
 
 typedef std::shared_ptr<HttpSampleGRPCFilterConfig> HttpSampleGRPCFilterConfigSharedPtr;
 
-// class HttpSampleGRPCFilter : public StreamEncoderFilter, protected Logger::Loggable<Envoy::Logger::Id::main> {
 class HttpSampleGRPCFilter : public StreamFilter,
                                 protected Logger::Loggable<Envoy::Logger::Id::main> {
-                                // protected Logger::Loggable<Envoy::Logger::Id::main>,
-                                // public Envoy::Extensions::Filters::Common::ExtAuthz::GrpcClientImpl {
 public:
   HttpSampleGRPCFilter(HttpSampleGRPCFilterConfigSharedPtr);
   ~HttpSampleGRPCFilter();

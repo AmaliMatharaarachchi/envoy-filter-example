@@ -1,15 +1,10 @@
 #include <string>
 
 #include "envoy/registry/registry.h"
-// #include "envoy/source/common/protobuf/utility.h"
 
 #include "http_filter.pb.h"
 #include "http_filter.pb.validate.h"
 #include "http_filter.h"
-
-// #include "envoy/source/extensions/filters/http/common/factory_base.h"
-// extensions/filters/http/common/factory_base.h"
-// #include "envoy/extensions/filters/http/well_known_names.h"
 
 namespace Envoy {
 namespace Server {
@@ -41,10 +36,6 @@ private:
 
     return [config](Http::FilterChainFactoryCallbacks& callbacks) -> void {
       auto filter = new Http::HttpSampleGRPCFilter(config);
-      //decoder path
-      // callbacks.addStreamDecoderFilter(Http::StreamDecoderFilterSharedPtr{filter});
-      //encoder path
-      // callbacks.addStreamEncoderFilter(Http::StreamEncoderFilterSharedPtr{filter});
       callbacks.addStreamFilter(Http::StreamFilterSharedPtr{filter});
     };
   }
