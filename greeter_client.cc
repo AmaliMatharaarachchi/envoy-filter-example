@@ -84,19 +84,17 @@ class GreeterClient {
   std::unique_ptr<Greeter::Stub> stub_;
 };
 
-int main(int argc, char** argv) {
+bool listener() {
   std::string address = "localhost";
   std::string port = "50051";
   std::string server_address = address + ":" + port;
   std::cout << "Client querying server address: " << server_address << std::endl;
 
-
   // Instantiate the client. It requires a channel, out of which the actual RPCs
   // are created. This channel models a connection to an endpoint (in this case,
   // localhost at port 50051). We indicate that the channel isn't authenticated
   // (use of InsecureChannelCredentials()).
-  GreeterClient greeter(grpc::CreateChannel(
-      server_address, grpc::InsecureChannelCredentials()));
+  GreeterClient greeter(grpc::CreateChannel(server_address, grpc::InsecureChannelCredentials()));
   std::string user("world");
 
   std::string reply = greeter.SayHello(user);
@@ -104,6 +102,7 @@ int main(int argc, char** argv) {
 
   reply = greeter.SayHelloAgain(user);
   std::cout << "Greeter received: " << reply << std::endl;
-
-  return 0;
+  return true;
 }
+
+

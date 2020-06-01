@@ -1,13 +1,12 @@
 #include <string>
 
 #include "http_filter.h"
-
-#include "envoy/server/filter_config.h"
+// #include "greeter_client.cc"
 
 namespace Envoy {
 namespace Http {
 
-HttpSampleGRPCFilterConfig::HttpSampleGRPCFilterConfig(const sample::MyGRPC& proto_config)
+HttpSampleGRPCFilterConfig::HttpSampleGRPCFilterConfig(const helloworld::MyGRPC& proto_config)
     : key_(proto_config.key()), val_(proto_config.val()) {}
 
 HttpSampleGRPCFilter::HttpSampleGRPCFilter(HttpSampleGRPCFilterConfigSharedPtr config)

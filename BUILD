@@ -26,20 +26,12 @@ envoy_cc_library(
     hdrs = ["http_filter.h"],
     repository = "@envoy",
     deps = [
-        ":pkg_cc_proto",
+        ":helloworld_cc_grpc",
+        ":greeter_client",
         "@envoy//source/exe:envoy_common_lib",
     ],
 )
 
-envoy_cc_library(
-    name = "http_filter_config",
-    srcs = ["http_filter_config.cc"],
-    repository = "@envoy",
-    deps = [
-        ":http_filter_lib",
-        "@envoy//include/envoy/server:filter_config_interface",
-    ],
-)
 
 # Following is for the GRPC service
 # The following three rules - the usage of the cc_grpc_library rule in
@@ -65,10 +57,9 @@ cc_grpc_library(
     deps = [":helloworld_cc_proto"],
 )
 
-cc_binary(
+cc_library(
     name = "greeter_client",
     srcs = ["greeter_client.cc"],
-    defines = ["BAZEL_BUILD"],
     deps = [
         ":helloworld_cc_grpc",
         # http_archive made this label available for binding
@@ -84,5 +75,18 @@ cc_binary(
         ":helloworld_cc_grpc",
         # http_archive made this label available for binding
         "@com_github_grpc_grpc//:grpc++",
+    ],
+)
+
+envoy_cc_library(
+    name = "http_filter_config",
+    srcs = ["http_filter_config.cc"],
+    repository = "@envoy",
+    deps = [
+        ":helloworld_cc_grpc",
+        # http_archive made this label available for binding
+        "@com_github_grpc_grpc//:grpc++",
+        ":http_filter_lib",
+        "@envoy//include/envoy/server:filter_config_interface",
     ],
 )

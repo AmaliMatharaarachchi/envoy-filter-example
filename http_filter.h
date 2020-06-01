@@ -4,14 +4,14 @@
 
 #include "envoy/server/filter_config.h"
 
-#include "http_filter.pb.h"
+#include "helloworld.grpc.pb.h"
 
 namespace Envoy {
 namespace Http {
 
 class HttpSampleGRPCFilterConfig {
 public:
-  HttpSampleGRPCFilterConfig(const sample::MyGRPC& proto_config);
+  HttpSampleGRPCFilterConfig(const helloworld::MyGRPC& proto_config);
 
   const std::string& key() const { return key_; }
   const std::string& val() const { return val_; }
@@ -53,7 +53,7 @@ private:
 
   const LowerCaseString headerKey() const;
   const std::string headerValue() const;
-  absl::string_view headerVal;;
+  absl::string_view headerVal;
 };
 
 } // namespace Http
