@@ -1,0 +1,84 @@
+syntax = "proto3";
+
+package envoy.service.mgw_res.v3;
+
+import "envoy/config/core/v3/base.proto";
+import "mgw-api/services/response/v3/attribute_context.proto";
+import "envoy/type/v3/http_status.proto";
+
+import "google/rpc/status.proto";
+
+import "udpa/annotations/migrate.proto";
+import "udpa/annotations/status.proto";
+import "udpa/annotations/versioning.proto";
+import "validate/validate.proto";
+
+option java_package = "io.envoyproxy.envoy.service.mgw_res.v3";
+option java_outer_classname = "MgwResProto";
+option java_multiple_files = true;
+option java_generic_services = true;
+option (udpa.annotations.file_status).package_version_status = ACTIVE;
+
+// [#protodoc-title: MGWResponse Service ]
+
+// The mgw_resorization service request messages used by external mgw_resorization :ref:`network filter
+// <config_network_filters_ext_mgw_resz>` and :ref:`HTTP filter <config_http_filters_ext_mgw_resz>`.
+
+// A generic interface for performing mgw_resorization check on incoming
+// requests to a networked service.
+service MGWResponse {
+  // Performs mgw_resorization check based on the attributes associated with the
+  // incoming request, and returns status `OK` or not `OK`.
+  rpc Intercept(CheckRequest) returns (CheckResponse) {
+  }
+}
+
+message CheckRequest {
+  // The request attributes.
+  AttributeContext attributes = 1;
+}
+
+// HTTP attributes for a denied response.
+message DeniedHttpResponse {
+  // This field allows the mgw_resorization service to send a HTTP response status
+  // code to the downstream client other than 403 (Forbidden).
+  type.v3.HttpStatus status = 1 [(validate.rules).message = {required: true}];
+
+  // This field allows the mgw_resorization service to send HTTP response headers
+  // to the downstream client.
+  repeated config.core.v3.HeaderValueOption headers = 2;
+
+  // This field allows the mgw_resorization service to send a response body data
+  // to the downstream client.
+  string body = 3;
+}
+
+// HTTP attributes for an ok response.
+message OkHttpResponse {
+
+  // HTTP entity headers in addition to the original request headers. This allows the mgw_resorization
+  // service to append, to add or to override headers from the original request before
+  // dispatching it to the upstream. By setting `append` field to `true` in the `HeaderValueOption`,
+  // the filter will append the correspondent header value to the matched request header. Note that
+  // by Leaving `append` as false, the filter will either add a new header, or override an existing
+  // one if there is a match.
+  repeated config.core.v3.HeaderValueOption headers = 2;
+}
+
+// Intended for gRPC and Network Authorization servers `only`.
+message CheckResponse {
+
+  // Status `OK` allows the request. Any other status indicates the request should be denied.
+  google.rpc.Status status = 1;
+
+  // An message that contains HTTP response attributes. This message is
+  // used when the mgw_resorization service needs to send custom responses to the
+  // downstream client or, to modify/add request headers being dispatched to the upstream.
+  oneof http_response {
+    // Supplies http attributes for a denied response.
+    DeniedHttpResponse denied_response = 2;
+
+    // Supplies http attributes for an ok response.
+    OkHttpResponse ok_response = 3;
+  }
+}
