@@ -14,7 +14,7 @@ To build the Envoy static binary:
 
 ## Sample config
 
-`
+```
 admin:
   access_log_path: /tmp/admin_access.log
   address:
@@ -107,4 +107,4 @@ static_resources:
                 address: 0.0.0.0
                 port_value: 8688
     connect_timeout: 600s
-`
+```
