@@ -24,6 +24,7 @@ void Filter::onDestroy() {
   //   res_client_->cancel();
   // }
 }
+}
 
 // Http::StreamEncoderFilter
 Http::FilterHeadersStatus Filter::encode100ContinueHeaders(Http::ResponseHeaderMap&) {
@@ -35,7 +36,10 @@ Http::FilterHeadersStatus Filter::encodeHeaders(Http::ResponseHeaderMap& , bool)
 
   // Initiate a call to the authorization server since we are not disabled.
   initiateResponseInterceptCall();
-  return Http::FilterHeadersStatus::Continue;
+
+  return response_filter_return_ == ResponseFilterReturn::StopEncoding
+             ? Http::FilterHeadersStatus::StopAllIterationAndWatermark
+             : Http::FilterHeadersStatus::Continue;
 }
 
 Http::FilterDataStatus Filter::encodeData(Buffer::Instance& , bool ) {
@@ -85,15 +89,24 @@ void Filter::onResponseComplete(Filters::Common::MGW::ResponsePtr&& response) {
     NOT_REACHED_GCOVR_EXCL_LINE;
     break;
   }
+  continueEncoding();
 }
 
 void Filter::initiateResponseInterceptCall() {
+  response_filter_return_ = ResponseFilterReturn::StopEncoding;
   Router::RouteConstSharedPtr route = res_callbacks_->route();
 
   ENVOY_STREAM_LOG(trace, "mgw filter calling response interceptor server", *res_callbacks_);
   res_state_ = State::Calling;
   res_client_->intercept(*this, res_intercept_request_, res_callbacks_->activeSpan(),
                          res_callbacks_->streamInfo());
+}
+
+void Filter::continueEncoding() {
+  response_filter_return_ = ResponseFilterReturn::ContinueEncoding;
+  if (!initiating_responce_call_) {
+    res_callbacks_->continueEncoding();
+  }
 }
 
 } // namespace MGW

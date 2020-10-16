@@ -69,6 +69,7 @@ private:
   // if this filter is either in the middle of calling the service or the result is denied then
   // the filter chain should stop. Otherwise the filter chain can continue to the next filter.
   enum class ResponseFilterReturn { ContinueEncoding, StopEncoding };
+  ResponseFilterReturn response_filter_return_{ResponseFilterReturn::ContinueEncoding};
   FilterConfigSharedPtr res_config_;
   Filters::Common::MGW::ResClientPtr res_client_;
   Http::StreamEncoderFilterCallbacks* res_callbacks_{};
