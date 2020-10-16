@@ -37,9 +37,10 @@ void GrpcResClientImpl::intercept(ResponseCallbacks& callbacks,
                                   Tracing::Span& parent_span, const StreamInfo::StreamInfo&) {
   ASSERT(callbacks_ == nullptr);
   callbacks_ = &callbacks;
-
+  std::cout << "response 40" << std::endl;
   request_ = async_client_->send(service_method_, request, *this, parent_span,
                                  Http::AsyncClient::RequestOptions().setTimeout(timeout_));
+  std::cout << "response 43" << std::endl;
 }
 
 void GrpcResClientImpl::onSuccess(
@@ -49,20 +50,9 @@ void GrpcResClientImpl::onSuccess(
   if (response->status().code() == Grpc::Status::WellKnownGrpcStatus::Ok) {
     span.setTag(TracingConstants::get().TraceStatus, TracingConstants::get().TraceOk);
     mgw_response->status = CheckStatus::OK;
-    if (response->has_ok_response()) {
-      toAuthzResponseHeader(mgw_response, response->ok_response().headers());
-    }
   } else {
     span.setTag(TracingConstants::get().TraceStatus, TracingConstants::get().TraceUnauthz);
     mgw_response->status = CheckStatus::Denied;
-    if (response->has_denied_response()) {
-      toAuthzResponseHeader(mgw_response, response->denied_response().headers());
-      mgw_response->status_code =
-          static_cast<Http::Code>(response->denied_response().status().code());
-      mgw_response->body = response->denied_response().body();
-    } else {
-      mgw_response->status_code = Http::Code::Forbidden;
-    }
   }
 
   callbacks_->onResponseComplete(std::move(mgw_response));

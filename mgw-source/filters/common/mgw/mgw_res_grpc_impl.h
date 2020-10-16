@@ -20,7 +20,6 @@
 
 #include "common/grpc/typed_async_client.h"
 
-#include "mgw-source/filters/common/mgw/check_response_utils.h"
 #include "mgw-source/filters/common/mgw/mgw.h"
 
 namespace Envoy {

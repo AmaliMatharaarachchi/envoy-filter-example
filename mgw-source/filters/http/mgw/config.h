@@ -15,8 +15,7 @@ namespace MGW {
  * Config registration for the external authorization filter. @see NamedHttpFilterConfigFactory.
  */
 class MGWFilterConfig
-    : public Common::FactoryBase<envoy::extensions::filters::http::mgw::v3::MGW,
-                                 envoy::extensions::filters::http::mgw::v3::MGWPerRoute> {
+    : public Common::FactoryBase<envoy::extensions::filters::http::mgw::v3::MGW> {
 public:
   MGWFilterConfig() : FactoryBase("envoy.filters.http.mgw") {}
 
@@ -25,12 +24,6 @@ private:
   Http::FilterFactoryCb createFilterFactoryFromProtoTyped(
       const envoy::extensions::filters::http::mgw::v3::MGW& proto_config,
       const std::string& stats_prefix, Server::Configuration::FactoryContext& context) override;
-
-  // filter support for route specific
-  Router::RouteSpecificFilterConfigConstSharedPtr createRouteSpecificFilterConfigTyped(
-      const envoy::extensions::filters::http::mgw::v3::MGWPerRoute& proto_config,
-      Server::Configuration::ServerFactoryContext& context,
-      ProtobufMessage::ValidationVisitor& validator) override;
 };
 
 } // namespace MGW

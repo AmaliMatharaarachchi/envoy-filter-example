@@ -7,12 +7,13 @@ load(
 
 envoy_cc_library(
     name = "mgw",
-    srcs = ["mgw.cc"],
-    hdrs = ["mgw.h", "filter_config.h"],
+    srcs = ["analytics.cc"],
+    hdrs = ["analytics.h", "filter_config.h"],
     repository = "@envoy",
     deps = [
         # ":filter_config",
         "@envoy//include/envoy/http:codes_interface",
+        "@envoy//include/envoy/http:context_interface",
         "@envoy//include/envoy/stats:stats_macros",
         "@envoy//source/common/buffer:buffer_lib",
         "@envoy//source/common/common:assert_lib",
@@ -23,7 +24,6 @@ envoy_cc_library(
         "@envoy//source/common/http:codes_lib",
         "@envoy//source/common/http:utility_lib",
         "@envoy//source/common/router:config_lib",
-        "//mgw-source/filters/common/mgw:mgw_grpc_lib",
         "//mgw-source/filters/common/mgw:mgw_res_grpc_lib",
         "@envoy_api//envoy/config/core/v3:pkg_cc_proto",
         "//mgw-api/extensions/filters/http/mgw/v3:pkg_cc_proto",
