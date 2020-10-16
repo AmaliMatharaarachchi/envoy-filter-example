@@ -9,7 +9,6 @@
 #include "envoy/http/filter.h"
 #include "envoy/local_info/local_info.h"
 #include "envoy/runtime/runtime.h"
-#include "envoy/service/auth/v3/external_auth.pb.h"
 #include "mgw-api/services/response/v3/mgw_res.pb.h"
 #include "envoy/stats/scope.h"
 #include "envoy/stats/stats_macros.h"
@@ -74,8 +73,6 @@ private:
   Filters::Common::MGW::ResClientPtr res_client_;
   Http::StreamEncoderFilterCallbacks* res_callbacks_{};
   State res_state_{State::NotStarted}; //state of response interceptor service
-  //TODO(amalimatharaarachchi) upstream cluster is used for downstream
-  Upstream::ClusterInfoConstSharedPtr downstream_cluster_;
   // Used to identify if the response callback to onComplete() is synchronous (on the stack) or asynchronous.
   bool initiating_responce_call_{};
   envoy::service::mgw_res::v3::CheckRequest res_intercept_request_{};

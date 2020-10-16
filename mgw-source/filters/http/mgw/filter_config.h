@@ -9,7 +9,6 @@
 #include "envoy/local_info/local_info.h"
 #include "envoy/runtime/runtime.h"
 #include "envoy/service/auth/v3/external_auth.pb.h"
-#include "mgw-api/services/response/v3/mgw_res.pb.h"
 #include "envoy/stats/scope.h"
 #include "envoy/stats/stats_macros.h"
 #include "envoy/upstream/cluster_manager.h"

@@ -4,8 +4,8 @@
 #include <string>
 
 #include "envoy/config/core/v3/grpc_service.pb.h"
-#include "mgw-api/extensions/filters/http/mgw/v3//mgw.pb.h"
-#include "mgw-api/extensions/filters/http/mgw/v3//mgw.pb.validate.h"
+#include "mgw-api/extensions/filters/http/mgw/v3/mgw.pb.h"
+#include "mgw-api/extensions/filters/http/mgw/v3/mgw.pb.validate.h"
 #include "envoy/registry/registry.h"
 
 #include "common/protobuf/utility.h"
