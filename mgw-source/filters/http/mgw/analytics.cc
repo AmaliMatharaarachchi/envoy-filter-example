@@ -19,11 +19,10 @@ namespace MGW {
 // Http::StreamFilterBase
 void Filter::onDestroy() {
   ENVOY_STREAM_LOG(trace, "[SIGH] filter destroyed", *res_callbacks_);
-  // if (res_state_ == State::Calling) {
-  //   res_state_ = State::Complete;
-  //   res_client_->cancel();
-  // }
-}
+  if (res_state_ == State::Calling) {
+    res_state_ = State::Complete;
+    res_client_->cancel();
+  }
 }
 
 // Http::StreamEncoderFilter
@@ -66,13 +65,11 @@ void Filter::onResponseComplete(Filters::Common::MGW::ResponsePtr&& response) {
   // Stats::StatName empty_stat_name;
   switch (response->status) {
   case CheckStatus::OK: {
-    std::cout << "response 64" << std::endl;
     ENVOY_STREAM_LOG(trace, "mgw analytics filter successfully sent data to filter chain", *res_callbacks_);
     break;
   }
 
   case CheckStatus::Error: {
-    std::cout << "response 71" << std::endl;
     // ENVOY_STREAM_LOG(trace,
     //                   "mgw filter rejected the request with an error. Response status code: {}",
     //                   *res_callbacks_, enumToInt(res_config_->statusOnError()));
@@ -85,7 +82,6 @@ void Filter::onResponseComplete(Filters::Common::MGW::ResponsePtr&& response) {
     break;
   }
   default:
-    std::cout << "response 499" << std::endl;
     NOT_REACHED_GCOVR_EXCL_LINE;
     break;
   }

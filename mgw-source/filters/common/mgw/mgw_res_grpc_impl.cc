@@ -37,15 +37,12 @@ void GrpcResClientImpl::intercept(ResponseCallbacks& callbacks,
                                   Tracing::Span& parent_span, const StreamInfo::StreamInfo&) {
   ASSERT(callbacks_ == nullptr);
   callbacks_ = &callbacks;
-  std::cout << "response 40" << std::endl;
   request_ = async_client_->send(service_method_, request, *this, parent_span,
                                  Http::AsyncClient::RequestOptions().setTimeout(timeout_));
-  std::cout << "response 43" << std::endl;
 }
 
 void GrpcResClientImpl::onSuccess(
     std::unique_ptr<envoy::service::mgw_res::v3::CheckResponse>&& response, Tracing::Span& span) {
-  std::cout << "response 47" << std::endl;
   ResponsePtr mgw_response = std::make_unique<Response>(Response{});
   if (response->status().code() == Grpc::Status::WellKnownGrpcStatus::Ok) {
     span.setTag(TracingConstants::get().TraceStatus, TracingConstants::get().TraceOk);
@@ -65,7 +62,6 @@ void GrpcResClientImpl::onFailure(Grpc::Status::GrpcStatus status, const std::st
   Response response{};
   response.status = CheckStatus::Error;
   response.status_code = Http::Code::Forbidden;
-  std::cout << "response 78" << std::endl;
   callbacks_->onResponseComplete(std::make_unique<Response>(response));
   callbacks_ = nullptr;
 }
