@@ -18,7 +18,4 @@ option (udpa.annotations.file_status).package_version_status = ACTIVE;
 // [#extension: envoy.filters.http.mgw]
 
 message MGW {
-  // External authorization service configuration.
-  // gRPC service configuration (default timeout: 200ms).
-  envoy.config.core.v3.GrpcService grpc_service = 1;
 }
